@@ -1,0 +1,66 @@
+<form action="/users/register" method="POST">
+  <fieldset>
+    <legend>Register</legend>
+    <div class="mb-3">
+      <label for="name" class="form-label"> Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        name="name"
+        aria-describedby="namehelp"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="useremail" class="form-label">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="useremail"
+        name="email"
+        aria-describedby="emailHelp"
+        required
+      />
+      <div id="emailHelp" class="form-text">
+        We'll never share your email with anyone else.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="userpassword" class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="userpassword"
+        name="password"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="confirmpassword" class="form-label">Confirm Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="confirmpassword"
+        name="confirmpassword"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <select name="role" class="form-select" aria-label="select role">
+        <option selected value="STUDENT">STUDENT</option>
+        <option value="TEACHER">TEACHER</option>
+      </select>
+    </div>
+
+    <button
+      type="submit"
+      style="font-size: 18px"
+      id="registerbutton"
+      class="btn btn-success"
+    >
+      Submit
+    </button>
+  </fieldset>
+</form>

@@ -1,0 +1,100 @@
+<div class="card mb-3" style="max-width: 540px">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img
+        src="https://picsum.photos/200/300?random=<%= index %>"
+        class="img-fluid rounded-start"
+        alt="<%= usr.name %>"
+      />
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title" id="profilename"><%= usr.name %></h5>
+        <% if(user._id+"" === usr._id+"") {%>
+        <input class="form-control" value="<%= usr.name %>" id="editname" ></input>
+        <%}else{%>
+        <input class="form-control" value="<%= usr.name %>" hidden  ></input>
+          <%}%>
+        <p class="card-text">
+          This is a wider card with supporting text below as a natural lead-in
+          to additional content. This content is a little bit longer.
+        </p>
+        <p class="card-text">
+          <small class="text-muted"><%= usr.email %></small>
+        </p>
+        <button
+          type="button"
+          class="btn btn-outline-success my-5 mx-2 position-relative"
+        >
+          courses
+          <span
+            class="
+              position-absolute
+              top-0
+              start-100
+              translate-middle
+              badge
+              rounded-pill
+              bg-warning
+            "
+          >
+            <%- usr.courses.length %>
+            <span class="visually-hidden">course count</span>
+          </span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger mx-2 position-relative"
+        >
+          quizes
+          <span
+            class="
+              position-absolute
+              top-0
+              start-100
+              translate-middle
+              badge
+              rounded-pill
+              bg-warning
+            "
+          >
+            <%- usr.history.length %>
+            <span class="visually-hidden">course count</span>
+          </span>
+        </button>
+        <% if(user._id+"" === usr._id+"") {%>
+        <button class="btn btn-primary" id="updateprofile" onclick="updateDetail()">
+          Edit Profile
+        </button>
+        <%}%>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const update = document.getElementById("updateprofile");
+  const profilename = document.getElementById("profilename");
+  const editname = document.getElementById("editname");
+  if(editname){
+  editname.style.display = "none"
+  function updateDetail(){
+    const newname = editname.value;
+    if(editname.style.display === "block"){
+      fetch("/users/<%= user.email %>",{
+        method:"PUT",
+        body:JSON.stringify({
+          name:newname
+        }),
+        headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+      }).then(()=> window.location.reload()).catch(err => console.log(err))
+    }
+    profilename.style.visibility = "hidden"
+    update.innerText = "Submit"
+  editname.style.display = "block"
+
+  }
+  }
+</script>

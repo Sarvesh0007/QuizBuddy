@@ -1,0 +1,310 @@
+<% if(user && user.role === "TEACHER"){ %>
+<h1>Welcome To Your Courses</h1>
+<%}%> <% if(user && user.role === "STUDENT"){ %>
+<h1>Welcome To Our Latest Courses</h1>
+<%}%>
+<div class="d-flex flex-column">
+  <% if(user && user.role === "TEACHER"){ %>
+  <div class="container justify-content-between">
+    <button
+      class="btn btn-success float-end m-2"
+      data-bs-toggle="modal"
+      data-bs-target="#addModal"
+    >
+      Add Course
+    </button>
+    <button
+      class="btn btn-primary float-end m-2"
+      data-bs-target="#editModal"
+      data-bs-toggle="modal"
+    >
+      Edit Course
+    </button>
+    <button
+      class="btn btn-danger float-end m-2"
+      data-bs-target="#deleteModal"
+      data-bs-toggle="modal"
+    >
+      Delete Course
+    </button>
+    <button
+      class="btn btn-warning float-end m-2"
+      data-bs-target="#quizModal"
+      data-bs-toggle="modal"
+    >
+      Add Quiz
+    </button>
+  </div>
+  <%}%>
+  <div class="container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Course Name</th>
+          <th scope="col">Faculty</th>
+          <th scope="col">Quiz</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% courses.forEach(function(course,index){%>
+        <tr>
+          <th scope="row"><%= index +1 %></th>
+          <td><%= course.name %></td>
+          <td><%= course.owner.name %></td>
+          <td>
+            <% if(course.quiz){ %>
+            <p>
+              <a href="/quizes/<%= course.quiz._id %>"
+                ><%= course.name %>/quiz</a
+              >
+            </p>
+            <%}else{%>
+            <p>No quiz</p>
+            <%}%>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div
+  class="modal fade"
+  id="addModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add Course</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="/courses" method="POST" id="add-form" novalidate>
+          <div class="form-floating mb-3">
+            <input
+              type="email"
+              id="owner"
+              name="owner"
+              placeholder="name@example.com"
+              value="<%= user._id %>"
+              hidden
+            />
+          </div>
+
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="courseName"
+              name="name"
+              placeholder="course name"
+            />
+            <label for="courseName">Course Name</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="add-form" class="btn btn-primary">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- edit modal -->
+<div
+  class="modal fade"
+  id="editModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Course</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="/courses/1"
+          class="needs-validation"
+          method="POST"
+          id="edit-form"
+        >
+          <div class="form-floating mb-3">
+            <select
+              name="pname"
+              class="form-select"
+              aria-label="Default select example"
+            >
+              <option selected value="<%= courses[0].name %>">
+                <%= courses[0].name %>
+              </option>
+              <% courses.forEach(function(course,index){%>
+              <option value="<%= course.name %>"><%= course.name %></option>
+
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="courseName"
+              name="name"
+              placeholder="course name"
+            />
+            <label for="courseName">new Course Name</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="edit-form" class="btn btn-primary">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- delete modal -->
+<div
+  class="modal fade"
+  id="deleteModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Course</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="/courses/delete"
+          class="needs-validation"
+          method="POST"
+          id="delete-form"
+        >
+          <div class="form-floating mb-3">
+            <select
+              name="name"
+              class="form-select"
+              aria-label="Default select example"
+            >
+              <option selected value="<%= courses[0]._id %>">
+                <%= courses[0].name %>
+              </option>
+              <% courses.forEach(function(course,index){%>
+              <option value="<%= course._id %>"><%= course.name %></option>
+
+              <% }) %>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="delete-form" class="btn btn-primary">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="quizModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="quizModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="quizModalLabel">Add Quiz To Course</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="/quizes"
+          class="needs-validation"
+          method="POST"
+          id="quiz-form"
+        >
+          <div class="form-floating mb-3">
+            <select
+              name="course"
+              class="form-select"
+              aria-label="Default select example"
+            >
+              <option selected value="<%= courses[0]._id %>">
+                <%= courses[0].name %>
+              </option>
+              <% courses.forEach(function(course,index){%>
+              <option value="<%= course._id %>"><%= course.name %></option>
+
+              <% }) %>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="quiz-form" class="btn btn-primary">
+          Create
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

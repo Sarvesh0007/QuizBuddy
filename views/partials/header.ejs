@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img
+        src="https://navigus.webpush.freshchat.com/d3c272fa88b4467585202952ef387e9cd606c05beca0e0c3d50423781722a5e3/f_hlimage/u_dd7fe1ebc2af508769533ea92f2ddf23585ece5652d74024d2a09ec669cb96e2/img_1543428131611.png"
+        alt=""
+        width="30"
+        height="24"
+      />
+      Navigus Teaching Buddy <% if(user) {%>
+      <a class="navbar-brand" href="#"><%= user.name %> </a>
+      <%} %>
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/courses"
+            >Courses</a
+          >
+        </li>
+        <% if(user && user.role === "TEACHER") {%>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/teachers">Teachers</a>
+        </li>
+
+        <% }else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/students">Students</a>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+    <div>
+      <ul class="navbar-nav float-end">
+        <% if(user) {%>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/logout">Logout</a>
+        </li>
+
+        <%} else {%>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/register">Register</a>
+        </li>
+        <%} %>
+      </ul>
+    </div>
+  </div>
+</nav>

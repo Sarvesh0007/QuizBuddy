@@ -1,0 +1,184 @@
+<% if (user && user.role === "TEACHER") { %>
+<h2>Manage Quiz Here</h2>
+<div class="container">
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-target="#addQuestion"
+    data-bs-toggle="modal"
+  >
+    Add Question
+  </button>
+  <div class="container">
+    <div class="card p-4 mt-3">
+      <% quiz.questions.forEach(function(question){ %>
+      <div class="card m-1 p-1">
+        <div class="card-header d-flex justify-content-between">
+          <h4><p><%= question.content %></p></h4>
+          <% if(user && user.role === "TEACHER") {%>
+          <button
+            class="btn btn-outline-danger"
+            value="<%= question._id %>"
+            onclick="removeQuestion(this)"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+          <%}%>
+        </div>
+        <% question.answers.forEach(function(answer,index){ %>
+        <span
+          >Option <%= index %>
+          <p><%= answer %></p></span
+        >
+        <% }); %>
+        <h5>Timer:<%= question.timer %></h5>
+        <h5>Max Score:<%= question.point %></h5>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</div>
+<% } else { %>
+<div class="container">
+  <div class="card p-4 mt-3">
+    <form id="test-form" action="/quizes/attempt" method="POST">
+      <input type="text" name="quiz" hidden value="<%= quiz._id %>" />
+      <% Array.from(quiz.questions).forEach(function(question,qindex){ %>
+      <div class="card m-1 p-1">
+        <div class="card-header d-flex justify-content-between">
+          <h4><p><%= question.content %></p></h4>
+        </div>
+        <% question.answers.forEach(function(answer,index){ %>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="answers-<%= qindex%>"
+            value="<%= answer.toLowerCase() %>"
+            id="flexCheckDefault"
+          />
+          <label class="form-check-label" for="flexCheckDefault">
+            <%= answer.toLowerCase() %>
+          </label>
+        </div>
+        <% }); %>
+        <div class="card-footer d-flex justify-content-between">
+          <h5 style="border-radius: 100%">
+            <i class="far fa-clock" style="color: brown"></i><%= question.timer
+            %>seconds
+          </h5>
+          <h5>Max Score:<%= question.point %></h5>
+        </div>
+      </div>
+      <% }); %>
+    </form>
+
+    <button class="btn btn-danger" form="test-form">Submit Test</button>
+  </div>
+</div>
+<%}%>
+
+<div
+  class="modal fade"
+  id="addQuestion"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addQuestionLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addQuestionLabel">Add Question</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="/question" method="POST" id="add-form" novalidate>
+          <input type="text" value="<%= quiz._id %>" hidden name="quiz" />
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="content"
+              name="content"
+              placeholder="who is the best?"
+            />
+            <label for="content">content</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="answers"
+              name="answers"
+              placeholder="answers sperated with commas eg:option1,option2"
+            />
+            <label for="answers">Answers</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="correct"
+              name="correct"
+              placeholder="correct answers if multiple provide by seperating with comma (,)"
+            />
+            <label for="correct">correct answers</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="number"
+              class="form-control"
+              min="0"
+              max="10"
+              id="point"
+              name="point"
+              placeholder="point score of the question"
+            />
+            <label for="point">max point/score</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="number"
+              class="form-control"
+              min="30"
+              id="timer"
+              name="timer"
+              value="30"
+              placeholder="timer in seconds"
+            />
+            <label for="timer">Timer(in sec)</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="add-form" class="btn btn-primary">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function removeQuestion(event) {
+    if (event) {
+      fetch(`/question/${event.value}`, {
+        method: "DELETE",
+      })
+        .then(() => window.location.reload())
+        .catch((err) => console.log(err));
+    } else {
+      console.log("failed to find and delete question");
+    }
+  }
+</script>
