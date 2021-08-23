@@ -147,6 +147,7 @@ module.exports = {
         let scored = 0;
         let totalScore = 0;
         quiz.questions.map((question, index) => {
+         question.correct =  question.correct.map(ans => ans.toLowerCase())
           totalScore += question.point;
           console.log(question.correct[0], answers[`answers-${index}`]);
           if (question.correct.length === 1) {
