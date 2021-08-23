@@ -46,7 +46,7 @@ module.exports = {
         }
         console.log(Quiz);
 
-        return res.render("quiz/dash", { quiz: Quiz });
+        return res.render("Quiz/dash", { quiz: Quiz });
       });
   },
 
